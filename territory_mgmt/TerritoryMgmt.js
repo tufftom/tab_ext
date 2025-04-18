@@ -262,7 +262,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${RETOOL_API_KEY}`
+          'X-Workflow-Api-Key': RETOOL_API_KEY
         },
         mode: 'no-cors',
         body: JSON.stringify(payload)
