@@ -255,10 +255,11 @@
 
       console.log('Sending data to Retool:', {
         url: RETOOL_WEBHOOK_URL,
-        payload: payload
+        payloadSize: JSON.stringify(payload).length,
+        recordCount: data.length
       });
 
-      await fetch(RETOOL_WEBHOOK_URL, {
+      const response = await fetch(RETOOL_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +270,7 @@
       });
 
       showMessage('Data sent to Retool', true);
-      console.log('Request sent to Retool with no-cors mode');
+      console.log('Request sent to Retool successfully');
     } catch (error) {
       console.error('Error sending data to Retool:', error);
       showMessage(`Error: ${error.message}`, false);
