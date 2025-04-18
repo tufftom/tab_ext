@@ -275,15 +275,16 @@
         return rowData;
       });
 
-      // Create a much smaller test payload (only 2 records)
-      const testPayload = {
+      // Create payload matching the working curl command format
+      const payload = {
         worksheet: worksheetName,
-        data: data.slice(0, 2)
+        data: data.slice(0, 1) // Send just one record for testing
       };
 
-      console.log('Sending test data to Retool:', {
+      console.log('Sending data to Retool:', {
         url: RETOOL_WEBHOOK_URL,
-        payload: JSON.stringify(testPayload),
+        method: 'POST',
+        payload: JSON.stringify(payload),
         headers: {
           'Content-Type': 'application/json',
           'X-Workflow-Api-Key': RETOOL_API_KEY
@@ -297,10 +298,10 @@
 
       xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
-          console.log('XHR request completed successfully:', xhr.responseText);
+          console.log('XHR Response:', xhr.responseText);
           showMessage('Data sent to Retool successfully', true);
         } else {
-          console.error('XHR request failed:', xhr.status, xhr.statusText);
+          console.error('XHR Error:', xhr.status, xhr.statusText);
           showMessage(`Error: ${xhr.status} - ${xhr.statusText}`, false);
         }
       };
@@ -310,7 +311,7 @@
         showMessage('Network error occurred while sending data to Retool', false);
       };
 
-      xhr.send(JSON.stringify(testPayload));
+      xhr.send(JSON.stringify(payload));
     } catch (error) {
       console.error('Error in sendToRetool:', error);
       showMessage(`Error: ${error.message}`, false);
