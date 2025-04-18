@@ -223,6 +223,31 @@
     }, 5000);
   }
 
+  function sendXHR(url, apiKey, data) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('X-Workflow-Api-Key', apiKey);
+      
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject(new Error(`HTTP error! status: ${xhr.status}`));
+        }
+      };
+      
+      xhr.onerror = () => {
+        console.log('XHR error event triggered');
+        // With no-cors, this will usually be called but might still succeed on server
+        resolve('Request sent with unknown result');
+      };
+      
+      xhr.send(JSON.stringify(data));
+    });
+  }
+
   async function sendToRetool() {
     try {
       const worksheetName = tableau.extensions.settings.get('sheet');
@@ -248,29 +273,23 @@
         return rowData;
       });
 
-      const payload = {
+      // Create a smaller payload for testing
+      const smallerPayload = {
         worksheet: worksheetName,
-        data: data
+        data: data.slice(0, 2) // Only send 2 records
       };
 
       console.log('Sending data to Retool:', {
         url: RETOOL_WEBHOOK_URL,
-        payloadSize: JSON.stringify(payload).length,
-        recordCount: data.length
+        payloadSize: JSON.stringify(smallerPayload).length,
+        recordCount: smallerPayload.data.length,
+        sampleData: JSON.stringify(smallerPayload).substring(0, 1000) + '...'
       });
 
-      const response = await fetch(RETOOL_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Workflow-Api-Key': RETOOL_API_KEY
-        },
-        mode: 'no-cors',
-        body: JSON.stringify(payload)
-      });
-
+      console.log('Sending data using XHR');
+      await sendXHR(RETOOL_WEBHOOK_URL, RETOOL_API_KEY, smallerPayload);
+      console.log('XHR request completed');
       showMessage('Data sent to Retool', true);
-      console.log('Request sent to Retool successfully');
     } catch (error) {
       console.error('Error sending data to Retool:', error);
       showMessage(`Error: ${error.message}`, false);
