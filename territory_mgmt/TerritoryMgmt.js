@@ -253,6 +253,11 @@
         data: data
       };
 
+      console.log('Sending data to Retool:', {
+        url: RETOOL_WEBHOOK_URL,
+        payload: payload
+      });
+
       const response = await fetch(RETOOL_WEBHOOK_URL, {
         method: 'POST',
         headers: {
@@ -262,12 +267,16 @@
         body: JSON.stringify(payload)
       });
 
-      if (response.ok) {
-        showMessage('Data successfully sent to Retool', true);
-      } else {
-        showMessage(`Error sending data: ${response.statusText}`, false);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
+
+      const responseData = await response.json();
+      showMessage('Data successfully sent to Retool', true);
+      console.log('Retool response:', responseData);
     } catch (error) {
+      console.error('Error sending data to Retool:', error);
       showMessage(`Error: ${error.message}`, false);
     }
   }
