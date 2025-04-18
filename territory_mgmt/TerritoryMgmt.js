@@ -258,23 +258,18 @@
         payload: payload
       });
 
-      const response = await fetch(RETOOL_WEBHOOK_URL, {
+      await fetch(RETOOL_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${RETOOL_API_KEY}`
         },
+        mode: 'no-cors',
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-
-      const responseData = await response.json();
-      showMessage('Data successfully sent to Retool', true);
-      console.log('Retool response:', responseData);
+      showMessage('Data sent to Retool', true);
+      console.log('Request sent to Retool with no-cors mode');
     } catch (error) {
       console.error('Error sending data to Retool:', error);
       showMessage(`Error: ${error.message}`, false);
