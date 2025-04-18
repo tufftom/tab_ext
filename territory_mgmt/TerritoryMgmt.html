@@ -5,26 +5,24 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.retool.com https://cdn.datatables.net https://fonts.googleapis.com; connect-src 'self' https://api.retool.com; style-src 'self' 'unsafe-inline' https://cdn.datatables.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.datatables.net;">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.retool.com https://cdn.datatables.net https://fonts.googleapis.com https://prod-ca-a.online.tableau.com; connect-src 'self' https://api.retool.com https://prod-ca-a.online.tableau.com; style-src 'self' 'unsafe-inline' https://cdn.datatables.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.datatables.net;">
+    <meta http-equiv="Access-Control-Allow-Origin" content="https://prod-ca-a.online.tableau.com">
     <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, OPTIONS">
-    <meta http-equiv="Access-Control-Allow-Headers" content="Content-Type, X-Workflow-Api-Key">
+    <meta http-equiv="Access-Control-Allow-Headers" content="Content-Type, X-Workflow-Api-Key, Origin">
+    <meta http-equiv="Access-Control-Allow-Credentials" content="true">
 
-    <title>Tutorial - Part 6</title>
+    <title>Territory Management</title>
 
-    <!-- These two libraries are copied from the download builder here: https://datatables.net/download/ -->
+    <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/fh-3.1.4/r-2.2.2/sc-2.0.0/datatables.min.css" />
 
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/fh-3.1.4/r-2.2.2/sc-2.0.0/datatables.min.js">
-    </script>
-
-    <!-- An icon library, learn more here: https://material.io/resources/icons/?style=baseline -->
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Include the Tableau Extensions library so we can communicate with Tableau -->
+    <!-- Tableau Extensions library -->
     <script src="../tableau.extensions.1.latest.js"></script>
 
-    <!-- Include our own style sheets and javascript code -->
+    <!-- Custom CSS and JS -->
     <link rel="stylesheet" href="./TerritoryMgmt.css">
     <script src="./TerritoryMgmt.js"></script>
 </head>
@@ -36,14 +34,14 @@
             <h4>
                 Marks for <span class="sheet_name" id="selected_marks_title">Sheet Name</span>
                 <button title="Choose Sheet" type="button" class="btn btn-link" id="show_choose_sheet_button">
-          <i class="material-icons">build</i>
-        </button>
+                    <i class="material-icons">build</i>
+                </button>
                 <button title="Reset Filters" type="button" class="btn btn-link" id="reset_filters_button">
-          <i class="material-icons">replay</i>
-        </button>
+                    <i class="material-icons">replay</i>
+                </button>
                 <button title="Send to Retool" type="button" class="btn btn-link" id="send_to_retool_button">
-          <i class="material-icons">send</i>
-        </button>
+                    <i class="material-icons">send</i>
+                </button>
             </h4>
             <div id="message_area" class="alert" style="display: none;"></div>
             <div id="data_table_wrapper"></div>
@@ -53,15 +51,15 @@
         </div>
     </div>
 
-    <!-- Choose Sheet Dialog (See https://www.w3schools.com/bootstrap/bootstrap_modal.asp for bootstrap dialog info) -->
+    <!-- Choose Sheet Dialog -->
     <div id="choose_sheet_dialog" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Choose a Sheet from <span class="sheet_name" id="choose_sheet_title"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="choose_sheet_buttons"></div>

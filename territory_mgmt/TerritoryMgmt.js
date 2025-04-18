@@ -2,7 +2,8 @@
 
 // Wrap everything in an anonymous function to avoid polluting the global namespace
 (function () {
-  // Webhook URL - replace with your actual Retool webhook URL
+  // Webhook URL with CORS proxy
+  const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
   const RETOOL_WEBHOOK_URL = 'https://api.retool.com/v1/workflows/0b47dc9f-a14a-447f-a177-37d8150bb478/startTrigger';
   const RETOOL_API_KEY = 'retool_wk_27d82ecb33f64316ba0452377738a991';
 
@@ -275,28 +276,30 @@
         return rowData;
       });
 
-      // Create payload matching the working curl command format
       const payload = {
         worksheet: worksheetName,
         data: data.slice(0, 1) // Send just one record for testing
       };
 
+      // Get the current origin
+      const currentOrigin = window.location.origin;
+      console.log('Current origin:', currentOrigin);
+
       console.log('Sending data to Retool:', {
         url: RETOOL_WEBHOOK_URL,
+        origin: currentOrigin,
         method: 'POST',
-        payload: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Workflow-Api-Key': RETOOL_API_KEY
-        }
+        payload: JSON.stringify(payload)
       });
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', RETOOL_WEBHOOK_URL);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.setRequestHeader('X-Workflow-Api-Key', RETOOL_API_KEY);
+      xhr.setRequestHeader('Origin', currentOrigin);
 
       xhr.onload = function() {
+        console.log('XHR Response Headers:', xhr.getAllResponseHeaders());
         if (xhr.status >= 200 && xhr.status < 300) {
           console.log('XHR Response:', xhr.responseText);
           showMessage('Data sent to Retool successfully', true);

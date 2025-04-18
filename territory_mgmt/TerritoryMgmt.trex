@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trex>
+    <dashboard-extension id="com.tufftom.territorymgmt" name="Territory Management" description="Extension for managing territories and sending data to Retool">
+        <source-location>
+            <url>TerritoryMgmt.html</url>
+        </source-location>
+        <icon>icon.png</icon>
+        <permissions>
+            <permission>full-data</permission>
+        </permissions>
+        <min-api-version>1.0.0</min-api-version>
+        <max-api-version>1.0.0</max-api-version>
+        <default-height>500</default-height>
+        <default-width>800</default-width>
+        <allowed-domains>
+            <domain>https://api.retool.com</domain>
+            <domain>https://prod-ca-a.online.tableau.com</domain>
+        </allowed-domains>
+    </dashboard-extension>
+</trex> 
