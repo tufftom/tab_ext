@@ -234,14 +234,16 @@
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.response);
         } else {
-          reject(new Error(`HTTP error! status: ${xhr.status}`));
+          let errorMessage = `HTTP error! status: ${xhr.status}`;
+          if (xhr.status === 401) {
+            errorMessage = 'Authentication failed. Please check your Retool API key.';
+          }
+          reject(new Error(errorMessage));
         }
       };
       
       xhr.onerror = () => {
-        console.log('XHR error event triggered');
-        // With no-cors, this will usually be called but might still succeed on server
-        resolve('Request sent with unknown result');
+        reject(new Error('Network error occurred while sending data to Retool'));
       };
       
       xhr.send(JSON.stringify(data));
@@ -273,23 +275,24 @@
         return rowData;
       });
 
-      // Create a smaller payload for testing
-      const smallerPayload = {
+      // Create payload matching the curl command format
+      const payload = {
         worksheet: worksheetName,
-        data: data.slice(0, 2) // Only send 2 records
+        data: data.slice(0, 2) // Only send 2 records for testing
       };
 
       console.log('Sending data to Retool:', {
         url: RETOOL_WEBHOOK_URL,
-        payloadSize: JSON.stringify(smallerPayload).length,
-        recordCount: smallerPayload.data.length,
-        sampleData: JSON.stringify(smallerPayload).substring(0, 1000) + '...'
+        payload: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Workflow-Api-Key': RETOOL_API_KEY
+        }
       });
 
-      console.log('Sending data using XHR');
-      await sendXHR(RETOOL_WEBHOOK_URL, RETOOL_API_KEY, smallerPayload);
-      console.log('XHR request completed');
-      showMessage('Data sent to Retool', true);
+      const response = await sendXHR(RETOOL_WEBHOOK_URL, RETOOL_API_KEY, payload);
+      console.log('XHR request completed successfully:', response);
+      showMessage('Data sent to Retool successfully', true);
     } catch (error) {
       console.error('Error sending data to Retool:', error);
       showMessage(`Error: ${error.message}`, false);
