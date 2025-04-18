@@ -3,7 +3,8 @@
 // Wrap everything in an anonymous function to avoid polluting the global namespace
 (function () {
   // Webhook URL - replace with your actual Retool webhook URL
-  const RETOOL_WEBHOOK_URL = 'https://your-retool-webhook-url.com';
+  const RETOOL_WEBHOOK_URL = 'https://api.retool.com/v1/workflows/0b47dc9f-a14a-447f-a177-37d8150bb478/startTrigger';
+  const RETOOL_API_KEY = 'retool_wk_27d82ecb33f64316ba0452377738a991';
 
   // Use the jQuery document ready signal to know when everything has been initialized
   $(document).ready(function () {
@@ -255,7 +256,8 @@
       const response = await fetch(RETOOL_WEBHOOK_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${RETOOL_API_KEY}`
         },
         body: JSON.stringify(payload)
       });
